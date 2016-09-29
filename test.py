@@ -7,10 +7,12 @@ sc = SparkContext('local', 'osp')
 
 test = sc.textFile('./test.txt')
 
-word_count = (
+
+res = (
     test
-    .map(lambda line: len(line.split()))
-    .reduce(lambda a, b: a+b)
+    .flatMap(lambda line: line.split())
+    .map(lambda word: (word, 1))
+    .reduceByKey(lambda a, b: a+b)
 )
 
-print(word_count)
+print(res.collect())
